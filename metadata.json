@@ -1,0 +1,5 @@
+{
+  "name": "AI-Powered SIEM Dashboard",
+  "description": "A Security Information and Event Management (SIEM) dashboard that uses Google Gemini 2.5 Flash to analyze server logs, detect threats (SQLi, XSS, Brute Force), and provide actionable mitigation steps in real-time.",
+  "requestFramePermissions": []
+}
