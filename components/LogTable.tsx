@@ -77,7 +77,12 @@ export const LogTable: React.FC<LogTableProps> = ({ logs, onAnalyze, onViewDetai
                           <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin text-cyan-400" />
                         </div>
                       ) : log.analysis ? (
-                         log.analysis.isThreat ? (
+                        log.analysis.severity === LogSeverity.ERROR ? (
+                          <div className="flex items-center justify-center gap-1 text-gray-500">
+                            <AlertTriangle size={12} className="sm:w-3.5 sm:h-3.5" />
+                            <span className="text-[10px] sm:text-xs font-bold">FAILED</span>
+                          </div>
+                        ) : log.analysis.isThreat ? (
                            <div className="flex items-center justify-center gap-1 text-red-500">
                              <AlertTriangle size={12} className="sm:w-3.5 sm:h-3.5" />
                              <span className="text-[10px] sm:text-xs font-bold">THREAT</span>

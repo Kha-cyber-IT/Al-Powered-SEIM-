@@ -12,23 +12,26 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ log, isOpen, onClo
   if (!isOpen || !log || !log.analysis) return null;
 
   const { analysis } = log;
-  const isSafe = !analysis.isThreat;
+  const isError = analysis.severity === LogSeverity.ERROR;
+  const isSafe = !analysis.isThreat && !isError;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <div className="bg-gray-900 border border-gray-700 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Header */}
-        <div className={`p-6 flex justify-between items-center border-b ${isSafe ? 'border-green-900 bg-green-900/10' : 'border-red-900 bg-red-900/10'}`}>
+        <div className={`p-6 flex justify-between items-center border-b ${isSafe ? 'border-green-900 bg-green-900/10' : isError ? 'border-gray-700 bg-gray-800' : 'border-red-900 bg-red-900/10'}`}>
           <div className="flex items-center gap-3">
             {isSafe ? (
               <CheckCircle className="text-green-500 w-8 h-8" />
+            ) : isError ? (
+              <AlertTriangle className="text-yellow-500 w-8 h-8" />
             ) : (
               <ShieldAlert className="text-red-500 w-8 h-8" />
             )}
             <div>
               <h2 className="text-xl font-bold text-white">
-                {isSafe ? 'Traffic Analysis: SAFE' : `THREAT DETECTED: ${analysis.threatType?.toUpperCase()}`}
+                {isSafe ? 'Traffic Analysis: SAFE' : isError ? 'ANALYSIS FAILED' : `THREAT DETECTED: ${analysis.threatType?.toUpperCase()}`}
               </h2>
               <p className="text-sm text-gray-400 font-mono">{log.timestamp}</p>
             </div>
@@ -87,11 +90,11 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ log, isOpen, onClo
             </div>
           </div>
 
-          {/* Mitigation Steps (Only if threat) */}
+          {/* Mitigation Steps (Only if threat or error) */}
           {!isSafe && analysis.mitigationSteps && (
             <div className="space-y-3">
-              <h3 className="text-sm uppercase tracking-wider text-red-400 font-bold flex items-center gap-2">
-                <AlertTriangle size={16} /> Recommended Mitigation
+              <h3 className={`text-sm uppercase tracking-wider font-bold flex items-center gap-2 ${isError ? 'text-yellow-400' : 'text-red-400'}`}>
+                <AlertTriangle size={16} /> {isError ? 'Troubleshooting' : 'Recommended Mitigation'}
               </h3>
               <ul className="space-y-2">
                 {analysis.mitigationSteps.map((step, idx) => (

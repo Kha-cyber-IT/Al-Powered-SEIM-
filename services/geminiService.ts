@@ -2,7 +2,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AIAnalysisResult, LogSeverity } from '../types';
 
 // Ensure API Key is available
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = process.env.API_KEY;
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 const modelId = "gemini-2.5-flash";
 
@@ -24,7 +25,7 @@ const analysisSchema = {
 };
 
 export const analyzeLogWithGemini = async (logLine: string): Promise<AIAnalysisResult> => {
-  if (!process.env.API_KEY) {
+  if (!ai) {
     // Fallback for demo if no key (simulated response)
     return new Promise(resolve => {
         setTimeout(() => {
